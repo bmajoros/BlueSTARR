@@ -1,8 +1,12 @@
 MIT License
 
-Copyright (c) 2024 Bill Majoros
-This software is derived from the DeepSTARR model by Bernardo P. de Almeida et al., also available via MIT License at: 
+BlueSTARR: Copyright (c) 2024 Bill Majoros and Alexander Thomson.
+
+This software is derived from the original DeepSTARR model by Bernardo P. de Almeida et al., also available via MIT License at: 
   https://github.com/bernardo-de-almeida/DeepSTARR
+
+The original copyright notice pertaining to DeepSTARR is:
+  Copyright (c) 2021 Bernardo P. de Almeida
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
