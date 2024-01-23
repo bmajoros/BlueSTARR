@@ -1,21 +1,6 @@
 MIT License
 
-BlueSTARR: Copyright (c) 2024 Bill Majoros and Alexander Thomson.
-
-This software "BlueSTARR" is derived from the original model "DeepSTARR"
-by Bernardo P. de Almeida et al. released under the MIT License and available
-at: 
-  https://github.com/bernardo-de-almeida/DeepSTARR
-
-The original copyright notice pertaining to DeepSTARR is:
-  Copyright (c) 2021 Bernardo P. de Almeida
-
-This software also makes use of "DNA Helper" software previously released
-under the MIT license and available at:
-  https://github.com/const-ae/Neural_Network_DNA_Demo
-
-The original copyright notice of DNA Helper is:
-  Copyright (c) 2017 const-ae
+Copyright (c) 2017 const-ae
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
