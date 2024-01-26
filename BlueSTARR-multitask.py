@@ -12,8 +12,6 @@ import tensorflow as tf
 import keras
 import keras.layers as kl
 from keras.layers import Conv1D, MaxPooling1D, AveragePooling1D
-#from keras.layers.convolutional import Conv1D, MaxPooling1D, AveragePooling1D
-#from keras.layers.core import Dropout, Reshape, Dense, Activation, Flatten
 from keras.layers import Dropout, Reshape, Dense, Activation, Flatten
 from keras.layers import BatchNormalization, InputLayer, Input, LSTM, GRU, Bidirectional, Add, Concatenate, LayerNormalization, MultiHeadAttention
 import keras_nlp
@@ -28,7 +26,6 @@ import pandas as pd
 import numpy as np
 import ProgramName
 import sys
-#sys.path.append('Neural_Network_DNA_Demo/')
 import IOHelper
 import SequenceHelper
 import random
