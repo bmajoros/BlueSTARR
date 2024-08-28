@@ -1,6 +1,6 @@
-tensorflow[and-cuda]
-pandas
-scikit-learn
-silence-tensorflow
-keras-nlp==0.4.0
-git+https://github.com/Duke-GCB/majoros-python-utils.git
+# There something funky with tensorflow[and-cuda] in version 2.15.0. So you
+# need to use the "--extra-index-url https://pypi.nvidia.com" option with
+# "pip install"
+tensorflow[and-cuda]==2.15.0; sys_platform == 'linux'
+tensorflow==2.15.0; sys_platform == 'darwin' # GPU isn't supported directly on macos
+-r non-tensorflow-reqs.txt

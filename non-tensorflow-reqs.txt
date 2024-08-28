@@ -1,0 +1,7 @@
+numpy
+keras
+keras-nlp==0.12.1
+pandas
+scikit-learn
+silence-tensorflow
+git+https://github.com/Duke-GCB/majoros-python-utils.git
