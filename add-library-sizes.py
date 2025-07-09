@@ -32,13 +32,14 @@ sizes="\t".join(sizes)
 labels="\t".join(labels)
 
 # Process the raw data file and append library sizes
+OUT=gzip.open(outFile,"wt")
 with gzip.open(rawFile,"rt") as IN:
     header=IN.readline()
     header=header.rstrip()+"\t"+labels
-    print(header)
+    print(header,file=OUT)
     for line in IN:
-        #fields=line.rstrip().split()
         line.rstrip()
-        print(line,sizes,sep="\t")
+        print(line,sizes,sep="\t",file=OUT)
+OUT.close()
 
 
