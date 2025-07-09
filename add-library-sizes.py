@@ -38,7 +38,7 @@ with gzip.open(rawFile,"rt") as IN:
     header=header.rstrip()+"\t"+labels
     print(header,file=OUT)
     for line in IN:
-        line.rstrip()
+        line=line.rstrip()
         print(line,sizes,sep="\t",file=OUT)
 OUT.close()
 
