@@ -14,22 +14,24 @@ import sys
 import ProgramName
 import gzip
 from FastaReader import FastaReader
+from FastaWriter import FastaWriter
 from Rex import Rex
 rex=Rex()
+fastaWriter=FastaWriter()
 
 def getKeeperList(inFastaFile):
     keep=set()
     with gzip.open(inFastaFile,"rt") as IN:
         for line in IN:
-            if(rex.find("> /coord=(\S+:\d+-\d+)",line)):
-                keep.insert(rex[1])
+            if(rex.find(">\S+ /coord=(\S+:\d+-\d+)",line)):
+                keep.add(rex[1])
     return keep
 
 def process(filestem,inFile,inDir,outDir,dnaReps,rnaReps):
     inFastaFile=inDir+"/"+filestem+".fasta.gz"
     #inCountsFile=inDir+"/"+filestem+"-counts.txt.gz"
     outFastaFile=outDir+"/"+filestem+".fasta.gz"
-    outCountsFile=outDir+"/"+filestem+"-counts.txt.g"
+    outCountsFile=outDir+"/"+filestem+"-counts.txt.gz"
     keep=getKeeperList(inFastaFile)
     COUNTS=gzip.open(outCountsFile,"wt")
     FASTA=gzip.open(outFastaFile,"wt")
@@ -39,21 +41,25 @@ def process(filestem,inFile,inDir,outDir,dnaReps,rnaReps):
 
 def writeRecords(inFile,keep,COUNTS,FASTA):
     headerFields=None
+    nextId=1
     with gzip.open(inFile,"rt") as IN:
         header=IN.readline()
         headerFields=header.rstrip().split()
+        endIdx=headerFields.index("end")
+        fcIdx=headerFields.index("log2FC")
+        seqIdx=headerFields.index("sequence")
         for line in IN:
             fields=line.rstrip().split()
             key=fields[0]+":"+fields[1]+"-"+fields[2]
             if key not in keep: continue
-            endIdx=headerFields.index("end")
-            fcIdx=headerFields.index("log2FC")
-            seqIdx=headerFields.index("sequence")
             counts=fields[(endIdx+1):fcIdx]
             libsizes=fields[(seqIdx+1):]
             counts.extend(libsizes)
-            print("\t".join(counts)) #,file=COUNTS)
-
+            print("\t".join(counts),file=COUNTS)
+            seq=fields[seqIdx]
+            defline=">"+str(nextId)+" /coord="+key
+            fastaWriter.addToFasta(defline,seq,FASTA)
+            nextId+=1
 
 #=========================================================================
 # main()
@@ -65,8 +71,8 @@ if(len(sys.argv)!=6):
 if(inDir==outDir): exit("Input and output directories cannot be the same")
 
 process("train",inFile,inDir,outDir,dnaReps,rnaReps)
-#process("validation",inFile,inDir,outDir,dnaReps,rnaReps)
-#process("test",inFile,inDir,outDir,dnaReps,rnaReps)
+process("validation",inFile,inDir,outDir,dnaReps,rnaReps)
+process("test",inFile,inDir,outDir,dnaReps,rnaReps)
 
 
 
