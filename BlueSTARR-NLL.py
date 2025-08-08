@@ -157,14 +157,7 @@ def logGam(x):
 def logLik(sumX,numX,Yj,logTheta,alpha,beta,numRNA,sumDnaLibs,RnaLibs):
     n=tf.shape(sumX)[0]
     sumX=tf.tile(tf.reshape(sumX,[n,1]),[1,numRNA])
-    theta=tf.math.exp(logTheta) # assume the model is predicting log(theta)
-    #print(sumDnaLibs)
-    #print(RnaLibs)
-    #print("Yj=",Yj)
-    #print("sumX=",sumX)
-    #print("numX=",numX)
-    #print("alpha=",alpha)
-    #sumDnaLibs=tf.reshape(sumDnaLibs,(128,3))
+    theta=tf.math.exp(logTheta) # assume model is predicting log(theta)
     n=tf.shape(sumDnaLibs)[0]
     sumDnaLibs=tf.tile(tf.reshape(sumDnaLibs,[n,1]),[1,numRNA])
     theta=theta*sumDnaLibs/RnaLibs
