@@ -11,22 +11,24 @@ from builtins import (bytes, dict, int, list, object, range, str, ascii,
 # The above imports should allow this program to run in both Python 2 and
 # Python 3.  You might need to update your version of module "future".
 import sys
+import os
 import ProgramName
 import numpy as np
 import gzip
 from Rex import Rex
+import TempFilename
 rex=Rex()
 rng = np.random.default_rng()
 alpha=1e-5
 beta=1e-5
 #scalingFactor=1.0/7.0
+tempfile=TempFilename.generate()
 
 def downsample(X):
     shape=alpha+X
     rate=beta+1
     scale=1/rate
     g=rng.gamma(shape, scale * scalingFactor)
-    #g=g*scalingFactor === THIS IS WRONG!
     newX=rng.poisson(g)
     return newX
 
@@ -38,14 +40,15 @@ if(len(sys.argv)!=4):
 (infile,outdir,scalingFactor)=sys.argv[1:]
 scalingFactor=float(scalingFactor)
 
+# Downsample into a temporary file without library sizes
 if(outdir=="."): raise Exception("operation will overwite input file")
-outfile=outdir+"/"+infile
-OUT=gzip.open(outfile,"wt")
+OUT=gzip.open(tempfile,"wt")
 IN=gzip.open(infile,"rt")
 header=IN.readline()
 print(header,end="",file=OUT)
 rex.findOrDie("DNA=(\\d+)\\s+RNA=(\\d+)",header)
 numDNA=int(rex[1]); numRNA=int(rex[2])
+newLibSizes=[0]*(numDNA+numRNA)
 for line in IN:
     fields=line.rstrip().split()
     fields=[int(x) for x in fields]
@@ -56,9 +59,23 @@ for line in IN:
     newX=[downsample(x) for x in DNAcounts]
     newY=[downsample(y) for y in RNAcounts]
     fields=newX; fields.extend(newY)
-    #fields.extend(DNAlibs); fields.extend(RNAlibs)
-    fields.extend(["."]*numDNA); fields.extend(["."]*numRNA)
+    for i in range(numDNA+numRNA):
+        newLibSizes[i]+=fields[i]
     print("\t".join([str(x) for x in fields]),file=OUT)
-IN.close()
-OUT.close()
+IN.close(); OUT.close()
 
+# Add library sizes and move into target output file
+outfile=outdir+"/"+infile
+OUT=gzip.open(outfile,"wt")
+IN=gzip.open(tempfile,"rt")
+header=IN.readline()
+print(header,end="",file=OUT)
+for line in IN:
+    fields=line.rstrip().split()
+    fields=[int(x) for x in fields]
+    DNAcounts=fields[:numDNA]
+    RNAcounts=fields[numDNA:(numDNA+numRNA)]
+    fields.extend(newLibSizes)
+    print("\t".join([str(x) for x in fields]),file=OUT)
+IN.close(); OUT.close()
+os.remove(tempfile)
