@@ -14,6 +14,7 @@ import sys
 import math
 import numpy as np
 from scipy.optimize import minimize
+from scipy.optimize import Bounds
 import ProgramName
 import gzip
 from Rex import Rex
@@ -28,14 +29,19 @@ def lgamma(x):
     return math.lgamma(x)
 
 def logLik(sumX,numX,rna,theta,alpha,beta,sumDnaLibs,RnaLibs):
+    #print("theta=",theta)
+    numX=1
     total=0
     for i in range(numRna):
         Yj=rna[i]
         libRatio=RnaLibs[i]/sumDnaLibs
         thetaL=theta*libRatio
-        LL=(sumX+alpha)*log(beta+numX)+lgamma(Yj+sumX+alpha)+Yj*log(thetaL)\
+        LL=(sumX+alpha)*log(beta+numX)+(Yj-1)*log(thetaL)+lgamma(Yj+sumX+alpha)+\
             -lgamma(sumX+alpha)-lgamma(Yj+1)-\
             (Yj+sumX+alpha)*log(thetaL+beta+numX)
+        #LL=(sumX+alpha)*log(beta+numX)+lgamma(Yj+sumX+alpha)+\
+        #    -lgamma(sumX+alpha)-lgamma(Yj+1)-\
+        #    (Yj+sumX+alpha)*log(beta+numX+1)#log(thetaL+beta+numX)
         total+=LL
         #print(LL)
     return total
@@ -81,8 +87,9 @@ with gzip.open(inCountsFile,"rt") as IN:
         dnaLibSum=sum(fields[firstLib:(firstLib+numDna)])
         rnaLibs=fields[(firstLib+numDna):]
         rna=fields[numDna:(numDna+numRna)]
-        #print("rna=",rna,"dnaSum=",dnaSum,"rnaLibs=",rnaLibs,"dnaLibSum=",dnaLibSum)
-        #naive=(rna/rnaLibs[i])/(dnaSum/dnaLibSum)
+        #for i in range(numRna):
+        #    naive=(rna[i]/rnaLibs[i])/(dnaSum/dnaLibSum)
+        #    print("naive =",naive)
         case=Case(dnaSum,rna,dnaLibSum,rnaLibs)
         data.append(case)
         lineNum+=1
@@ -90,8 +97,12 @@ with gzip.open(inCountsFile,"rt") as IN:
 
 # Minimize the negative log likelihood
 theta0 = np.array([0.5])
-opt = minimize(getClosure(data), theta0, method='nelder-mead',
-               options={'xatol': 1e-8, 'disp': True})
+bounds = Bounds(0.0001, 1000)
+opt = minimize(getClosure(data), theta0, method="trust-constr",
+               #method='nelder-mead',
+               #options={'xatol': 1e-8, 'disp': True})
+               bounds=bounds,
+               options={'disp': True}) 
 print("theta =",opt.x[0])
 
 
