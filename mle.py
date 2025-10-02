@@ -33,12 +33,11 @@ def logLik(sumX,numX,rna,theta,alpha,beta,sumDnaLibs,RnaLibs):
         Yj=rna[i]
         libRatio=RnaLibs[i]/sumDnaLibs
         thetaL=theta*libRatio
-        #print("beta=",beta,"numX=",numX,"theta=",theta)
-        LL=(sumX+alpha)*log(beta+numX)+lgamma(Yj+sumX+alpha)+Yj*log(theta)\
+        LL=(sumX+alpha)*log(beta+numX)+lgamma(Yj+sumX+alpha)+Yj*log(thetaL)\
             -lgamma(sumX+alpha)-lgamma(Yj+1)-\
-            (Yj+sumX+alpha)*log(theta+beta+numX)
+            (Yj+sumX+alpha)*log(thetaL+beta+numX)
         total+=LL
-        #print(LL)
+        print(LL)
     return total
 
 def getClosure(data):
