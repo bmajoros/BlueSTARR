@@ -38,6 +38,7 @@ def logLik(sumX,numX,rna,theta,alpha,beta,sumDnaLibs,RnaLibs):
             -lgamma(sumX+alpha)-lgamma(Yj+1)-\
             (Yj+sumX+alpha)*log(theta+beta+numX)
         total+=LL
+        #print(LL)
     return total
 
 def getClosure(data):
@@ -92,6 +93,6 @@ with gzip.open(inCountsFile,"rt") as IN:
 theta0 = np.array([0.5])
 opt = minimize(getClosure(data), theta0, method='nelder-mead',
                options={'xatol': 1e-8, 'disp': True})
-
+print("theta =",opt.x[0])
 
 
