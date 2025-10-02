@@ -37,7 +37,7 @@ def logLik(sumX,numX,rna,theta,alpha,beta,sumDnaLibs,RnaLibs):
             -lgamma(sumX+alpha)-lgamma(Yj+1)-\
             (Yj+sumX+alpha)*log(thetaL+beta+numX)
         total+=LL
-        print(LL)
+        #print(LL)
     return total
 
 def getClosure(data):
