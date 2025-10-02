@@ -164,7 +164,7 @@ def logLik(sumX,numX,Yj,logTheta,alpha,beta,numRNA,sumDnaLibs,RnaLibs):
     sumX=tf.tile(tf.reshape(sumX,[n,1]),[1,numRNA])
     #print("after tile:",tf.shape(sumX),sumX)
     theta=tf.math.exp(logTheta) # assume model is predicting log(theta)
-    print("theta=",tf.shape(theta),theta)
+    #print("theta=",tf.shape(theta),theta)
     n=tf.shape(sumDnaLibs)[0]
     #print("sumDnaLibs=",tf.shape(sumDnaLibs),sumDnaLibs)
     sumDnaLibs=tf.tile(tf.reshape(sumDnaLibs,[n,1]),[1,numRNA])
@@ -174,13 +174,13 @@ def logLik(sumX,numX,Yj,logTheta,alpha,beta,numRNA,sumDnaLibs,RnaLibs):
     #print("libRatio=",tf.shape(libRatio),libRatio)
     theta=theta*libRatio
     #print("theta scaled by lib ratio=",tf.shape(theta),theta)
-    #LL=(sumX+alpha)*log(beta+numX)+logGam(Yj+sumX+alpha)+Yj*log(theta)\
-    #    -logGam(sumX+alpha)-logGam(Yj+1)-(Yj+sumX+alpha)*log(theta+beta+numX)
-    LL=(sumX+alpha)*log(beta+numX)+logGam(Yj+sumX+alpha)+(Yj-1)*log(theta)\
+    LL=(sumX+alpha)*log(beta+numX)+logGam(Yj+sumX+alpha)+Yj*log(theta)\
         -logGam(sumX+alpha)-logGam(Yj+1)-(Yj+sumX+alpha)*log(theta+beta+numX)
-    print("LL=",tf.shape(LL),LL)
+    #LL=(sumX+alpha)*log(beta+numX)+logGam(Yj+sumX+alpha)+(Yj-1)*log(theta)\
+    #    -logGam(sumX+alpha)-logGam(Yj+1)-(Yj+sumX+alpha)*log(theta+beta+numX)
+    #print("LL=",tf.shape(LL),LL)
     reduced=tf.reduce_sum(LL,axis=1) # sum logLik across iid replicates
-    print("after reduce:",tf.shape(reduced),reduced)
+    #print("after reduce:",tf.shape(reduced),reduced)
     return reduced
 
 @tf.autograph.experimental.do_not_convert

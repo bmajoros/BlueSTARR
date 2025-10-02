@@ -36,12 +36,17 @@ def logLik(sumX,numX,rna,theta,alpha,beta,sumDnaLibs,RnaLibs):
         Yj=rna[i]
         libRatio=RnaLibs[i]/sumDnaLibs
         thetaL=theta*libRatio
+
+        # With Jacobian correction:
         LL=(sumX+alpha)*log(beta+numX)+(Yj-1)*log(thetaL)+lgamma(Yj+sumX+alpha)+\
             -lgamma(sumX+alpha)-lgamma(Yj+1)-\
             (Yj+sumX+alpha)*log(thetaL+beta+numX)
-        #LL=(sumX+alpha)*log(beta+numX)+lgamma(Yj+sumX+alpha)+\
-        #    -lgamma(sumX+alpha)-lgamma(Yj+1)-\
-        #    (Yj+sumX+alpha)*log(beta+numX+1)#log(thetaL+beta+numX)
+
+        # Without Jacobian correction:
+        LL=(sumX+alpha)*log(beta+numX)+Yj*log(thetaL)+lgamma(Yj+sumX+alpha)+\
+            -lgamma(sumX+alpha)-lgamma(Yj+1)-\
+            (Yj+sumX+alpha)*log(thetaL+beta+numX)
+
         total+=LL
         #print(LL)
     return total
