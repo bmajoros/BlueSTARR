@@ -155,23 +155,28 @@ def logGam(x):
     return tf.math.lgamma(x)
 
 def logLik(sumX,numX,Yj,logTheta,alpha,beta,numRNA,sumDnaLibs,RnaLibs):
-    print("Yj(RNA)=",Yj)
+    #print("Yj(RNA)=",Yj)
+
+    numX=1 ### changed on 10/2/2025
+
     n=tf.shape(sumX)[0]
-    print("sumX=",tf.shape(sumX),sumX)
+    #print("sumX=",tf.shape(sumX),sumX)
     sumX=tf.tile(tf.reshape(sumX,[n,1]),[1,numRNA])
-    print("after tile:",tf.shape(sumX),sumX)
+    #print("after tile:",tf.shape(sumX),sumX)
     theta=tf.math.exp(logTheta) # assume model is predicting log(theta)
     print("theta=",tf.shape(theta),theta)
     n=tf.shape(sumDnaLibs)[0]
-    print("sumDnaLibs=",tf.shape(sumDnaLibs),sumDnaLibs)
+    #print("sumDnaLibs=",tf.shape(sumDnaLibs),sumDnaLibs)
     sumDnaLibs=tf.tile(tf.reshape(sumDnaLibs,[n,1]),[1,numRNA])
-    print("after tile, sumDnaLibs=",tf.shape(sumDnaLibs),sumDnaLibs)
-    print("RnaLibs=",tf.shape(RnaLibs),RnaLibs)
+    #print("after tile, sumDnaLibs=",tf.shape(sumDnaLibs),sumDnaLibs)
+    #print("RnaLibs=",tf.shape(RnaLibs),RnaLibs)
     libRatio=RnaLibs/sumDnaLibs
-    print("libRatio=",tf.shape(libRatio),libRatio)
+    #print("libRatio=",tf.shape(libRatio),libRatio)
     theta=theta*libRatio
-    print("theta scaled by lib ratio=",tf.shape(theta),theta)
-    LL=(sumX+alpha)*log(beta+numX)+logGam(Yj+sumX+alpha)+Yj*log(theta)\
+    #print("theta scaled by lib ratio=",tf.shape(theta),theta)
+    #LL=(sumX+alpha)*log(beta+numX)+logGam(Yj+sumX+alpha)+Yj*log(theta)\
+    #    -logGam(sumX+alpha)-logGam(Yj+1)-(Yj+sumX+alpha)*log(theta+beta+numX)
+    LL=(sumX+alpha)*log(beta+numX)+logGam(Yj+sumX+alpha)+(Yj-1)*log(theta)\
         -logGam(sumX+alpha)-logGam(Yj+1)-(Yj+sumX+alpha)*log(theta+beta+numX)
     print("LL=",tf.shape(LL),LL)
     reduced=tf.reduce_sum(LL,axis=1) # sum logLik across iid replicates
