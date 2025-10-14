@@ -151,6 +151,9 @@ def naiveCorrelation(y_true, y_pred, taskNum, numTasks):
 def log(x):
     return tf.math.log(x)
 
+def exp(x):
+    return tf.math.exp(x)
+
 def logGam(x):
     return tf.math.lgamma(x)
 
@@ -158,6 +161,8 @@ def logLik(sumX,numX,Yj,logTheta,alpha,beta,numRNA,sumDnaLibs,RnaLibs):
     Y=tf.reduce_sum(Yj,axis=1)
     n=numRNA
     L=tf.reduce_sum(RnaLibs,axis=1)/sumDnaLibs
+    X=sumDnaLibs
+    theta=exp(logTheta)
     firstRatio=log(beta+1)+logGam(alpha+Y+1)+logGam(alpha+X-1) -\
         ( log(L)+log(beta+n)+logGam(alpha+Y)+logGam(alpha+X) )
     secondRatio=2*log(beta+1)+logGam(alpha+Y+2)+logGam(alpha+X-2) -\
