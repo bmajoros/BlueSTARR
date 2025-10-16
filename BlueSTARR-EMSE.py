@@ -157,27 +157,27 @@ def exp(x):
 def logGam(x):
     return tf.math.lgamma(x)
 
-def logLik(sumX,numX,Yj,logTheta,alpha,beta,numRNA,sumDnaLibs,RnaLibs):
+def logLik(sumX,numX,Yj,theta,alpha,beta,numRNA,sumDnaLibs,RnaLibs):
     Y=tf.reduce_sum(Yj,axis=1)
-    #print("Y=",Y)
+    print("Y=",Y)
     n=numRNA
-    #print("n=",n)
+    print("n=",n)
     #L=tf.reduce_sum(RnaLibs,axis=1)/sumDnaLibs
     #print("L=",L)
     sumRnaLibs=tf.reduce_sum(RnaLibs,axis=1)
-    #print("sumRnaLibs=",sumRnaLibs)
+    print("sumRnaLibs=",sumRnaLibs)
     X=sumX
-    #print("X=",X)
-    theta=exp(logTheta)
-    #print("theta=",theta)
-    firstRatio=log(sumDnaLibs)+logGam(alpha+Y+1)+logGam(alpha+X-1) -\
-        ( log(sumRnaLibs)+logGam(alpha+Y)+logGam(alpha+X) )
-    #print("firstRatio=",firstRatio)
-    secondRatio=2*log(sumDnaLibs)+logGam(alpha+Y+2)+logGam(alpha+X-2) -\
+    print("X=",X)
+    #theta=exp(logTheta)
+    print("theta=",theta)
+    firstRatio=log(beta+sumDnaLibs)+logGam(alpha+Y+1)+logGam(alpha+X-1) -\
+        ( log(beta+sumRnaLibs)+logGam(alpha+Y)+logGam(alpha+X) )
+    print("firstRatio=",firstRatio)
+    secondRatio=2*log(beta+sumDnaLibs)+logGam(alpha+Y+2)+logGam(alpha+X-2) -\
         ( 2*log(sumRnaLibs)+logGam(alpha+Y)+logGam(alpha+X) )
-    #print("secondRatio=",secondRatio)
+    print("secondRatio=",secondRatio)
     squaredError=theta*theta - 2*theta*exp(firstRatio) + exp(secondRatio)
-    #print("sqErr=",squaredError)
+    print("sqErr=",squaredError)
     return squaredError
 #    n=tf.shape(sumX)[0]
 #    sumX=tf.tile(tf.reshape(sumX,[n,1]),[1,numRNA])
