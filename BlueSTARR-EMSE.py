@@ -159,37 +159,24 @@ def logGam(x):
 
 def logLik(sumX,numX,Yj,theta,alpha,beta,numRNA,sumDnaLibs,RnaLibs):
     Y=tf.reduce_sum(Yj,axis=1)
-    print("Y=",Y)
+    #print("Y=",Y)
     n=numRNA
-    print("n=",n)
-    #L=tf.reduce_sum(RnaLibs,axis=1)/sumDnaLibs
+    #print("n=",n)
     #print("L=",L)
     sumRnaLibs=tf.reduce_sum(RnaLibs,axis=1)
-    print("sumRnaLibs=",sumRnaLibs)
+    #print("sumRnaLibs=",sumRnaLibs)
     X=sumX
-    print("X=",X)
-    #theta=exp(logTheta)
-    print("theta=",theta)
+    #print("X=",X)
+    #print("theta=",theta)
     firstRatio=log(beta+sumDnaLibs)+logGam(alpha+Y+1)+logGam(alpha+X-1) -\
         ( log(beta+sumRnaLibs)+logGam(alpha+Y)+logGam(alpha+X) )
-    print("firstRatio=",firstRatio)
+    #print("firstRatio=",firstRatio)
     secondRatio=2*log(beta+sumDnaLibs)+logGam(alpha+Y+2)+logGam(alpha+X-2) -\
         ( 2*log(sumRnaLibs)+logGam(alpha+Y)+logGam(alpha+X) )
-    print("secondRatio=",secondRatio)
+    #print("secondRatio=",secondRatio)
     squaredError=theta*theta - 2*theta*exp(firstRatio) + exp(secondRatio)
-    print("sqErr=",squaredError)
+    #print("sqErr=",squaredError)
     return squaredError
-#    n=tf.shape(sumX)[0]
-#    sumX=tf.tile(tf.reshape(sumX,[n,1]),[1,numRNA])
-#    theta=tf.math.exp(logTheta) # assume model is predicting log(theta)
-#    n=tf.shape(sumDnaLibs)[0]
-#    sumDnaLibs=tf.tile(tf.reshape(sumDnaLibs,[n,1]),[1,numRNA])
-#    libRatio=RnaLibs/sumDnaLibs
-#    theta=theta*libRatio
-#    LL=(sumX+alpha)*log(beta+numX)+logGam(Yj+sumX+alpha)+Yj*log(theta)\
-#        -logGam(sumX+alpha)-logGam(Yj+1)-(Yj+sumX+alpha)*log(theta+beta+numX)
-#    reduced=tf.reduce_sum(LL,axis=1) # sum logLik across iid replicates
-#    return reduced
 
 @tf.autograph.experimental.do_not_convert
 def makeClosure(taskNum):
