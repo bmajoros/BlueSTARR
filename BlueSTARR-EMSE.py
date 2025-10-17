@@ -402,7 +402,7 @@ def BuildModel(seqlen):
     numTasks=len(tasks)
     for i in range(numTasks):
         task=tasks[i]
-        outputs.append(kl.Dense(1,activation='linear',name=task)(x))
+        outputs.append(kl.Dense(1,activation='relu',name=task)(x))
         loss=makeClosure(i) if config.useCustomLoss else "mse" #mseClosure(i)
         losses.append(loss)
     model = keras.models.Model([inputLayer], outputs)
