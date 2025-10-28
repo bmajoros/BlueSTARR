@@ -157,7 +157,7 @@ def exp(x):
 def logGam(x):
     return tf.math.lgamma(x)
 
-def logLik(sumX,numX,Yj,theta,alpha,beta,numRNA,sumDnaLibs,RnaLibs):
+def sqError(sumX,numX,Yj,theta,alpha,beta,numRNA,sumDnaLibs,RnaLibs):
     Y=tf.reduce_sum(Yj,axis=1)
     #print("Y=",Y)
     n=numRNA
@@ -194,9 +194,9 @@ def makeClosure(taskNum):
         RnaLibs=y_true[:,d:]
         sumX=tf.reduce_sum(DNA,axis=1)
         sumDnaLibs=tf.reduce_sum(DnaLibs,axis=1)
-        LL=-logLik(sumX,b-a,RNA,y_pred,EPSILON,EPSILON,NUM_RNA[taskNum],
+        se=sqError(sumX,b-a,RNA,y_pred,EPSILON,EPSILON,NUM_RNA[taskNum],
                    sumDnaLibs,RnaLibs)
-        return LL
+        return se
     return loss
 
 @tf.autograph.experimental.do_not_convert
